@@ -5,6 +5,7 @@
 #include "VorbisPicture.hxx"
 #include "ScanVorbisComment.hxx"
 #include "tag/Handler.hxx"
+#include "tag/LabelTag.hxx"
 #include "tag/Builder.hxx"
 #include "tag/Tag.hxx"
 #include "tag/VorbisComment.hxx"
@@ -61,8 +62,9 @@ vorbis_scan_comment(std::string_view comment, TagHandler &handler) noexcept
 }
 
 void
-VorbisCommentScan(const vorbis_comment &vc, TagHandler &handler) noexcept
+VorbisCommentScan(const vorbis_comment &vc, TagHandler &_handler) noexcept
 {
+	LabelTagHandler handler{_handler};
 	ForEachUserComment(vc, [&](std::string_view s){
 		vorbis_scan_comment(s, handler);
 	});

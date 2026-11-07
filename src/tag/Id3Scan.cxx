@@ -5,6 +5,7 @@
 #include "Id3String.hxx"
 #include "Id3Load.hxx"
 #include "Handler.hxx"
+#include "LabelTag.hxx"
 #include "Table.hxx"
 #include "Builder.hxx"
 #include "Tag.hxx"
@@ -306,8 +307,9 @@ tag_id3_handle_apic(const struct id3_tag *id3_tag,
 }
 
 void
-scan_id3_tag(const struct id3_tag *tag, TagHandler &handler) noexcept
+scan_id3_tag(const struct id3_tag *tag, TagHandler &_handler) noexcept
 {
+	LabelTagHandler handler{_handler, LabelTagHandler::ID3_PRIORITY};
 	tag_id3_import_text(tag, ID3_FRAME_ARTIST, TAG_ARTIST,
 			    handler);
 	tag_id3_import_text(tag, ID3_FRAME_ALBUM_ARTIST,

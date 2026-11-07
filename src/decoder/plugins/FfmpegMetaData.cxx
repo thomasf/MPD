@@ -8,6 +8,7 @@
 #include "tag/Names.hxx"
 #include "tag/Table.hxx"
 #include "tag/Handler.hxx"
+#include "tag/LabelTag.hxx"
 #include "tag/Id3MusicBrainz.hxx"
 
 extern "C" {
@@ -58,8 +59,9 @@ FfmpegScanPairs(AVDictionary *dict, TagHandler &handler) noexcept
 }
 
 void
-FfmpegScanDictionary(AVDictionary *dict, TagHandler &handler) noexcept
+FfmpegScanDictionary(AVDictionary *dict, TagHandler &_handler) noexcept
 {
+	LabelTagHandler handler{_handler};
 	if (handler.WantTag()) {
 		for (unsigned i = 0; i < TAG_NUM_OF_ITEM_TYPES; ++i)
 			FfmpegScanTag(TagType(i), dict, tag_item_names[i],
