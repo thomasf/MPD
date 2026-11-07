@@ -6,6 +6,7 @@
 #include "lib/xiph/VorbisPicture.hxx"
 #include "lib/xiph/XiphTags.hxx"
 #include "tag/Handler.hxx"
+#include "tag/LabelTag.hxx"
 #include "tag/ParseName.hxx"
 #include "util/ASCII.hxx"
 #include "tag/ReplayGainInfo.hxx"
@@ -80,8 +81,9 @@ ScanOneOpusTag(std::string_view name, std::string_view value,
 bool
 ScanOpusTags(const void *data, size_t size,
 	     ReplayGainInfo *rgi,
-	     TagHandler &handler) noexcept
+	     TagHandler &_handler) noexcept
 {
+	LabelTagHandler handler{_handler};
 	OpusReader r(data, size);
 	if (!r.Expect("OpusTags", 8))
 		return false;

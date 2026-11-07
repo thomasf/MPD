@@ -29,3 +29,17 @@ test(
   ),
   protocol: 'gtest',
 )
+
+test(
+  'TestLabelTag',
+  executable(
+    'TestLabelTag',
+    'TestLabelTag.cxx',
+    include_directories: inc,
+    dependencies: [
+      tag_dep,
+      gtest_dep,
+    ],
+  ),
+  protocol: 'gtest',
+)

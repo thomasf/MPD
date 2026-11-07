@@ -26,6 +26,7 @@ tag_sources = [
   'Names.cxx',
   'Pool.cxx',
   'Table.cxx',
+  'LabelTag.cxx',
   'Format.cxx',
   'VorbisComment.cxx',
   'ReplayGainInfo.cxx',

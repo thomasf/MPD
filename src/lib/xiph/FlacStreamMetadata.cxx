@@ -7,6 +7,7 @@
 #include "pcm/CheckAudioFormat.hxx"
 #include "tag/Handler.hxx"
 #include "tag/Builder.hxx"
+#include "tag/LabelTag.hxx"
 #include "tag/Tag.hxx"
 #include "tag/MixRampInfo.hxx"
 #include "tag/MixRampParser.hxx"
@@ -53,8 +54,9 @@ flac_parse_mixramp(const FLAC__StreamMetadata_VorbisComment &vc)
 
 static void
 flac_scan_comments(const FLAC__StreamMetadata_VorbisComment *comment,
-		   TagHandler &handler) noexcept
+		   TagHandler &_handler) noexcept
 {
+	LabelTagHandler handler{_handler};
 	for (unsigned i = 0; i < comment->num_comments; ++i)
 		ScanVorbisComment(ToStringView(comment->comments[i]), handler);
 }

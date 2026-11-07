@@ -6,6 +6,7 @@
 #include "ParseName.hxx"
 #include "Table.hxx"
 #include "Handler.hxx"
+#include "LabelTag.hxx"
 #include "util/IterableSplitString.hxx"
 
 static constexpr struct tag_table ape_tags[] = {
@@ -52,8 +53,9 @@ tag_ape_import_item(unsigned long flags,
 }
 
 bool
-tag_ape_scan2(InputStream &is, TagHandler &handler)
+tag_ape_scan2(InputStream &is, TagHandler &_handler)
 {
+	LabelTagHandler handler{_handler};
 	bool recognized = false;
 
 	auto callback = [&handler, &recognized]
