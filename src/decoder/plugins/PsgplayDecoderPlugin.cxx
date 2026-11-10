@@ -18,6 +18,7 @@
 #include "util/ScopeExit.hxx"
 #include "util/StringCompare.hxx"
 #include "Log.hxx"
+#include "decoder/EndlessMode.hxx"
 
 extern "C" {
 #include <psgplay/psgplay.h>
@@ -159,7 +160,7 @@ psgplay_file_decode(DecoderClient &client, Path path_fs)
 					  audio_format.sample_rate);
 	if (!pp)
 		return;
-	if (!duration.IsNegative())
+	if (!duration.IsNegative() && !global_endless_mode.load(std::memory_order_relaxed))
 		psgplay_stop_at_time(pp, duration.ToDoubleS());
 
 	AtScopeExit(pp) { psgplay_free(pp); };
@@ -194,7 +195,7 @@ psgplay_file_decode(DecoderClient &client, Path path_fs)
 						  audio_format.sample_rate);
 				if (!pp)
 					return;
-				if (!duration.IsNegative())
+				if (!duration.IsNegative() && !global_endless_mode.load(std::memory_order_relaxed))
 					psgplay_stop_at_time(pp, duration.ToDoubleS());
 
 				t_frames = 0;

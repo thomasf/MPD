@@ -9,6 +9,7 @@
 #include "tag/Type.hxx"
 #include "util/Domain.hxx"
 #include "Log.hxx"
+#include "decoder/EndlessMode.hxx"
 
 #include <libopenmpt/libopenmpt.hpp>
 
@@ -63,7 +64,7 @@ mod_decode(DecoderClient &client, InputStream &is)
 	openmpt::module mod(buffer.data(), buffer.size());
 
 	/* alter settings */
-	mod.set_repeat_count(openmpt_repeat_count);
+	mod.set_repeat_count(global_endless_mode.load(std::memory_order_relaxed) ? -1 : openmpt_repeat_count);
 	mod.set_render_param(mod.RENDER_STEREOSEPARATION_PERCENT, openmpt_stereo_separation);
 	mod.set_render_param(mod.RENDER_INTERPOLATIONFILTER_LENGTH, openmpt_interpolation_filter);
 	if (!openmpt_override_mptm_interp_filter && mod.get_metadata("type") == "mptm") {

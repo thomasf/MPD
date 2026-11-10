@@ -22,6 +22,7 @@
 #include "db/update/Service.hxx"
 #endif
 
+#include "decoder/EndlessMode.hxx"
 #include <fmt/format.h>
 
 #define COMMAND_STATUS_STATE            "state"
@@ -137,7 +138,8 @@ handle_status(Client &client, [[maybe_unused]] Request args, Response &r)
 	      COMMAND_STATUS_PLAYLIST_LENGTH ": {}\n"
 	      COMMAND_STATUS_MIXRAMPDB ": {}\n"
 	      COMMAND_STATUS_STATE ": {}\n"
-	      COMMAND_STATUS_LOADED_PLAYLIST ": {}\n",
+	      COMMAND_STATUS_LOADED_PLAYLIST ": {}\n"
+	      "endless: {}\n",
 	      (unsigned)playlist.GetRepeat(),
 	      (unsigned)playlist.GetRandom(),
 	      SingleToString(playlist.GetSingle()),
@@ -147,7 +149,8 @@ handle_status(Client &client, [[maybe_unused]] Request args, Response &r)
 	      playlist.GetLength(),
 	      pc.GetMixRampDb(),
 	      state,
-	      playlist.GetLastLoadedPlaylist());
+	      playlist.GetLastLoadedPlaylist(),
+	      (unsigned)global_endless_mode.load(std::memory_order_relaxed));
 
 	if (pc.GetCrossFade() > FloatDuration::zero())
 		r.Fmt(COMMAND_STATUS_CROSSFADE ": {}\n",

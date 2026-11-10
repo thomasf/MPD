@@ -22,6 +22,7 @@
 #include "util/ByteSizes.hxx"
 #include "util/StringCompare.hxx"
 #include "Log.hxx"
+#include "decoder/EndlessMode.hxx"
 
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidInfo.h>
@@ -345,7 +346,7 @@ sidplay_file_decode(DecoderClient &client, Path path_fs)
 	sidplayfp_time_t time = 0;
 
 	DecoderCommand cmd = DecoderCommand::NONE;
-	while (cmd != DecoderCommand::STOP && time < end_time) {
+	while (cmd != DecoderCommand::STOP && (global_endless_mode.load(std::memory_order_relaxed) || time < end_time)) {
 #if LIBSIDPLAYFP_VERSION_MAJ >= 3
 		const int result = player.play(CYCLES);
 		if (result <= 0) {

@@ -14,6 +14,7 @@
 #include "FileCommands.hxx"
 #include "OutputCommands.hxx"
 #include "MessageCommands.hxx"
+#include "EndlessCommands.hxx"
 #include "NeighborCommands.hxx"
 #include "ClientCommands.hxx"
 #include "PartitionCommands.hxx"
@@ -95,6 +96,7 @@ static constexpr struct command commands[] = {
 	{ "delpartition", PERMISSION_ADMIN, 1, 1, handle_delpartition },
 	{ "disableoutput", PERMISSION_ADMIN, 1, 1, handle_disableoutput },
 	{ "enableoutput", PERMISSION_ADMIN, 1, 1, handle_enableoutput },
+	{ "endless", PERMISSION_PLAYER, 0, 1, handle_endless },
 #ifdef ENABLE_DATABASE
 	{ "find", PERMISSION_READ, 1, -1, handle_find },
 	{ "findadd", PERMISSION_ADD, 1, -1, handle_findadd},

@@ -23,6 +23,7 @@
 #include "Outputs.hxx"
 #include "Listener.hxx"
 #include "decoder/Control.hxx"
+#include "decoder/EndlessMode.hxx"
 #include "MusicPipe.hxx"
 #include "MusicBuffer.hxx"
 #include "MusicChunk.hxx"
@@ -644,7 +645,10 @@ Player::SeekDecoder(std::unique_lock<Mutex> &lock, SongTime seek_time) noexcept
 	assert(song);
 	assert(!decoder_starting);
 
-	if (!pc.total_time.IsNegative()) {
+	/* in endless mode, songs play on past their duration, so
+	   seeking there is allowed too */
+	if (!pc.total_time.IsNegative() &&
+	    !global_endless_mode.load(std::memory_order_relaxed)) {
 		const SongTime total_time(pc.total_time);
 		if (seek_time > total_time)
 			seek_time = total_time;

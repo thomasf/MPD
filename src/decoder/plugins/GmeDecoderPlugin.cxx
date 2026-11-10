@@ -18,6 +18,7 @@
 #include "util/StringCompare.hxx"
 #include "util/Domain.hxx"
 #include "Log.hxx"
+#include "decoder/EndlessMode.hxx"
 
 #include <gme/gme.h>
 
@@ -189,7 +190,7 @@ gme_file_decode(DecoderClient &client, Path path_fs)
 	if (gme_err != nullptr)
 		LogWarning(gme_domain, gme_err);
 
-	if (length > 0 && fade != 0)
+	if (!global_endless_mode.load(std::memory_order_relaxed) && length > 0 && fade != 0)
 		gme_set_fade(emu, length
 #if GME_VERSION >= 0x000700
 			     , fade == -1 ? gme_default_fade : fade
@@ -216,7 +217,7 @@ gme_file_decode(DecoderClient &client, Path path_fs)
 				client.CommandFinished();
 		}
 
-		if (gme_track_ended(emu))
+		if (!global_endless_mode.load(std::memory_order_relaxed) && gme_track_ended(emu))
 			break;
 	} while (cmd != DecoderCommand::STOP);
 }

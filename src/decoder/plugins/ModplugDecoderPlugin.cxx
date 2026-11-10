@@ -9,6 +9,7 @@
 #include "lib/fmt/RuntimeError.hxx"
 #include "util/Domain.hxx"
 #include "Log.hxx"
+#include "decoder/EndlessMode.hxx"
 
 #ifdef _WIN32
 /* assume ModPlug is built as static library on Windows; without
@@ -78,7 +79,7 @@ mod_decode(DecoderClient &client, InputStream &is)
 	settings.mChannels = 2;
 	settings.mBits = 16;
 	settings.mFrequency = 44100;
-	settings.mLoopCount = modplug_loop_count;
+	settings.mLoopCount = global_endless_mode.load(std::memory_order_relaxed) ? -1 : modplug_loop_count;
 	/* insert more setting changes here */
 	ModPlug_SetSettings(&settings);
 
